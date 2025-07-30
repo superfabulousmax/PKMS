@@ -1,4 +1,3 @@
-from sqlalchemy.orm import Session
 from sqlalchemy.future import select
 from src.models.note import Note
 from src.schemas.note import NoteCreate
