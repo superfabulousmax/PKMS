@@ -12,13 +12,13 @@ async def get_note(db: AsyncSession, note_id: int):
     return note
 
 
-async def get_notes(db: Session):
+async def get_notes(db: AsyncSession):
     result = await db.execute(select(Note))
     notes = result.scalars().all()
     return notes
 
 
-async def create_note(db: Session, note: NoteCreate):
+async def create_note(db: AsyncSession, note: NoteCreate):
     db_note = Note(title=note.title, body=note.body)
     db.add(db_note)
     await db.commit()
