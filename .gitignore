@@ -1,0 +1,107 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+*.pyd
+*.pyo
+*.pkl
+*.log
+*.sqlite3
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+.env
+
+# PyInstaller
+*.spec
+
+# Pytest
+.cache/
+.tox/
+.coverage
+*.cover
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# === C# / .NET ===
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.log
+*.vspscc
+*.vssscc
+*.cache
+*.dbmdl
+*.dbproj.schemaview
+*.pdb
+*.exe
+*.dll
+
+# Rider
+.idea/
+
+# Visual Studio
+.vs/
+*.ncb
+*.aps
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+*.symbols.nupkg
+
+# User-specific files
+*.swp
+*.bak
+*.tmp
+*.orig
+*.sublime-workspace
+
+# === OS-specific ===
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# === Tools ===
+# VS Code
+.vscode/
+.history/
+
+# PyCharm
+.idea/
+*.iml
+
+# === Docker ===
+*.pid
+docker-compose.override.yml
