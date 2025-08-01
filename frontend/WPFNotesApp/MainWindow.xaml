@@ -2,12 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:WPFNotesApp.ViewModels"
+        xmlns:prism="http://prismlibrary.com/"
         Title="Notes App"
         Height="450"
-        Width="600">
-    <Window.DataContext>
-        <vm:MainViewModel/>
-    </Window.DataContext>
+        Width="600"
+        prism:ViewModelLocator.AutoWireViewModel="True">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -31,13 +30,18 @@
                  ItemsSource="{Binding Notes}" Margin="-10,25,10,5" Grid.RowSpan="2">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="0 5">
+                    <StackPanel Orientation ="Horizontal" Margin="0 5">
                         <TextBlock Text="{Binding Title}"
+                                   Margin="0,0,10,0"
                                    FontWeight="Bold"/>
                         <TextBlock Text="{Binding Body}"
+                                   Margin="0,0,10,0"
                                    TextWrapping="Wrap"/>
                         <Button Content="Delete"
+                                Margin="0,0,10,0"
                         Command="{Binding DeleteNoteCommand}"/>
+                        <Button Content="Open"
+                        Command="{Binding OpenNoteCommand}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 using System.Windows.Input;
 using WPFNotesApp.Connector;
+using WPFNotesApp.Events;
 using WPFNotesApp.Models;
+using WPFNotesApp.Views;
 
 namespace WPFNotesApp.ViewModels
 {
@@ -21,15 +15,31 @@ namespace WPFNotesApp.ViewModels
         public string Body { get; set; }
 
         public ICommand DeleteNoteCommand { get; }
+        public ICommand OpenNoteCommand { get; }
 
-        public event EventHandler<NoteViewModel>? DeleteRequested;
 
-        public NoteViewModel(int id, string title, string body)
+        EditNoteViewModel editViewModel;
+        EditNoteView editWindow;
+
+        private readonly IEventAggregator _eventAggregator;
+        private NoteRead _note;
+        public NoteViewModel(NoteRead note, IEventAggregator eventAggregator)
         {
             DeleteNoteCommand = new RelayCommand(DeleteNote);
-            Id = id;
-            Title = title;
-            Body = body;
+            OpenNoteCommand = new RelayCommand(OpenNote);
+            Id = note.Id;
+            Title = note.Title;
+            Body = note.Body;
+            _note = note;
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<NoteSavedEvent>().Subscribe(OnNoteSaved);
+        }
+
+        private void OnNoteSaved(NoteRead note)
+        {
+            _note = note;
+            Title = note.Title;
+            Body = note.Body;
         }
 
         private async void DeleteNote()
@@ -37,9 +47,18 @@ namespace WPFNotesApp.ViewModels
             var response = await _httpClient.DeleteAsync($"notes/{Id}");
             if (response.IsSuccessStatusCode)
             {
-                DeleteRequested?.Invoke(this, this);
+                _eventAggregator.GetEvent<NoteDeletedEvent>().Publish(this);
+                
                 Console.WriteLine("Successfully deleted");
             }
+        }
+
+        private void OpenNote()
+        {
+            editViewModel = new EditNoteViewModel(_note, _eventAggregator);
+
+            editWindow = new EditNoteView { DataContext = editViewModel };
+            editWindow.ShowDialog();
         }
 
     }
