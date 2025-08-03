@@ -34,7 +34,7 @@
                         <TextBlock Text="{Binding Title}"
                                    Margin="0,0,10,0"
                                    FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Body}"
+                        <TextBlock Text="{Binding PreviewBody}"
                                    Margin="0,0,10,0"
                                    TextWrapping="Wrap"/>
                         <Button Content="Delete"

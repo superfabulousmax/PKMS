@@ -10,15 +10,18 @@ namespace WPFNotesApp.ViewModels
         public int Id { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
+        public string PreviewBody =>
+            Body.Length > PreviewLength ? Body.Substring(0, PreviewLength) + "..." : Body;
 
         public ICommand DeleteNoteCommand { get; }
         public ICommand OpenNoteCommand { get; }
 
+        private readonly IEventAggregator _eventAggregator;
+        private const int PreviewLength = 100;
 
         private EditNoteViewModel _editViewModel;
         private EditNoteView _editWindow;
 
-        private readonly IEventAggregator _eventAggregator;
         private NoteRead _note;
         public NoteViewModel(NoteRead note, IEventAggregator eventAggregator)
         {
