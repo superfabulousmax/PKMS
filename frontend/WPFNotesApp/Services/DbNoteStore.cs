@@ -2,7 +2,6 @@
 using WPFNotesApp.Connector;
 using WPFNotesApp.Models;
 using System.Net.Http.Json;
-using System.Net;
 
 namespace WPFNotesApp.Services
 {
