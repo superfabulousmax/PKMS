@@ -1,17 +1,16 @@
 using System.Collections.ObjectModel;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Windows.Input;
 using WPFNotesApp.Models;
-using WPFNotesApp.Connector;
 using WPFNotesApp.Events;
+using WPFNotesApp.Services;
 
 namespace WPFNotesApp.ViewModels
 {
-    public class MainWindowViewModel : ObservableObject
+    public class MainWindowViewModel : BindableBase
     {
-        private readonly HttpClient _httpClient = BackendConnector.Instance.Client;
         private readonly IEventAggregator _eventAggregator;
+        private INoteStore _noteStore = null;
 
         public ObservableCollection<NoteViewModel> Notes { get; set; } = new();
 
@@ -31,9 +30,7 @@ namespace WPFNotesApp.ViewModels
 
         public ICommand AddNoteCommand { get; }
 
-        private Services.INoteStore _noteStore = null;
-
-        public MainWindowViewModel(Services.INoteStore noteStore, IEventAggregator eventAggregator)
+        public MainWindowViewModel(INoteStore noteStore, IEventAggregator eventAggregator)
         {
             _noteStore = noteStore;
             _eventAggregator = eventAggregator;
@@ -43,12 +40,14 @@ namespace WPFNotesApp.ViewModels
             _eventAggregator
                 .GetEvent<NoteSavedEvent>()
                 .Subscribe(OnNoteSaved);
+
             AddNoteCommand = new RelayCommand(AddNote);
             LoadNotesAsync();
         }
 
         private void OnNoteSaved(NoteRead note)
         {
+            _noteStore.UpdateNote(note);
             LoadNotesAsync();
         }
 
@@ -72,7 +71,7 @@ namespace WPFNotesApp.ViewModels
         {
             var newNote = new NoteCreate { Title = Title, Body = Body };
 
-            var response = await _httpClient.PostAsJsonAsync("notes/", newNote);
+            var response = await _noteStore.AddNote(newNote);
 
             if (response.IsSuccessStatusCode)
             {
@@ -90,6 +89,7 @@ namespace WPFNotesApp.ViewModels
 
         private void OnNoteDeleted(NoteViewModel note)
         {
+            _noteStore.DeleteNote(note.Id);
             Notes.Remove(note);
         }
     }

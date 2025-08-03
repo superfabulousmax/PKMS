@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using System.Windows.Input;
-using WPFNotesApp.Connector;
+﻿using System.Windows.Input;
 using WPFNotesApp.Events;
 using WPFNotesApp.Models;
 using WPFNotesApp.Views;
@@ -9,7 +7,6 @@ namespace WPFNotesApp.ViewModels
 {
     public class NoteViewModel
     {
-        private readonly HttpClient _httpClient = BackendConnector.Instance.Client;
         public int Id { get; set; }
         public string Title { get; set; }
         public string Body { get; set; }
@@ -42,21 +39,14 @@ namespace WPFNotesApp.ViewModels
             Body = note.Body;
         }
 
-        private async void DeleteNote()
+        private void DeleteNote()
         {
-            var response = await _httpClient.DeleteAsync($"notes/{Id}");
-            if (response.IsSuccessStatusCode)
-            {
-                _eventAggregator.GetEvent<NoteDeletedEvent>().Publish(this);
-                
-                Console.WriteLine("Successfully deleted");
-            }
+            _eventAggregator.GetEvent<NoteDeletedEvent>().Publish(this);
         }
 
         private void OpenNote()
         {
             editViewModel = new EditNoteViewModel(_note, _eventAggregator);
-
             editWindow = new EditNoteView { DataContext = editViewModel };
             editWindow.ShowDialog();
         }
