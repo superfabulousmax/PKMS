@@ -45,12 +45,6 @@ namespace WPFNotesApp.ViewModels
             LoadNotesAsync();
         }
 
-        private void OnNoteSaved(NoteRead note)
-        {
-            _noteStore.UpdateNote(note);
-            LoadNotesAsync();
-        }
-
         private async void LoadNotesAsync()
         {
             var notes = await _noteStore.GetAllNotes();
@@ -85,6 +79,12 @@ namespace WPFNotesApp.ViewModels
                 Title = string.Empty;
                 Body = string.Empty;
             }
+        }
+
+        private void OnNoteSaved(NoteRead note)
+        {
+            _noteStore.UpdateNote(note);
+            LoadNotesAsync();
         }
 
         private void OnNoteDeleted(NoteViewModel note)
