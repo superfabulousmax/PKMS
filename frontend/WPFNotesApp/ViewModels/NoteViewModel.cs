@@ -32,7 +32,7 @@ namespace WPFNotesApp.ViewModels
             Body = note.Body;
             _note = note;
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<NoteSavedEvent>().Subscribe(OnNoteSaved);
+            _eventAggregator.GetEvent<NoteSaveRequestedEvent>().Subscribe(OnNoteSaved);
         }
 
         private void OnNoteSaved(NoteRead note)

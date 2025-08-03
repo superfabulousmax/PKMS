@@ -2,7 +2,7 @@
 
 namespace WPFNotesApp.Events
 {
-    public class NoteSavedEvent: PubSubEvent<NoteRead>
+    public class NoteSaveRequestedEvent: PubSubEvent<NoteRead>
     {
     }
 }

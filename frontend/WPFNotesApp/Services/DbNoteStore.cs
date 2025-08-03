@@ -9,8 +9,8 @@ namespace WPFNotesApp.Services
     {
         public Task<List<NoteRead>> GetAllNotes();
         public Task<HttpResponseMessage> AddNote(NoteCreate note);
-        public void UpdateNote(NoteRead noteRead);
-        public void DeleteNote(int id);
+        public Task<HttpResponseMessage> UpdateNote(NoteRead noteRead);
+        public Task<HttpResponseMessage> DeleteNote(int id);
     }
     public class DbNoteStore: INoteStore
     {
@@ -24,14 +24,14 @@ namespace WPFNotesApp.Services
             return notes ?? new List<NoteRead>();
         }
 
-        public async void UpdateNote(NoteRead note)
+        public async Task<HttpResponseMessage> UpdateNote(NoteRead note)
         {
-            var _ = await _httpClient.PutAsJsonAsync($"notes/{note.Id}", note);
+            return await _httpClient.PutAsJsonAsync($"notes/{note.Id}", note);
         }
 
-        public async void DeleteNote(int id)
+        public async Task<HttpResponseMessage> DeleteNote(int id)
         {
-            var _ = await _httpClient.DeleteAsync($"notes/{id}");
+            return await _httpClient.DeleteAsync($"notes/{id}");
         }
 
         public async Task<HttpResponseMessage> AddNote(NoteCreate note)

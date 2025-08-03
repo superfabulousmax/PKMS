@@ -38,7 +38,7 @@ namespace WPFNotesApp.ViewModels
                 .GetEvent<NoteDeletedEvent>()
                 .Subscribe(OnNoteDeleted);
             _eventAggregator
-                .GetEvent<NoteSavedEvent>()
+                .GetEvent<NoteSaveRequestedEvent>()
                 .Subscribe(OnNoteSaved);
 
             AddNoteCommand = new RelayCommand(AddNote);
@@ -81,16 +81,23 @@ namespace WPFNotesApp.ViewModels
             }
         }
 
-        private void OnNoteSaved(NoteRead note)
+        private async void OnNoteSaved(NoteRead note)
         {
-            _noteStore.UpdateNote(note);
-            LoadNotesAsync();
+            var response = await _noteStore.UpdateNote(note);
+            if (response.IsSuccessStatusCode)
+            {
+                _eventAggregator.GetEvent<NoteSavedSuccesfully>().Publish();
+                LoadNotesAsync();
+            }
         }
 
-        private void OnNoteDeleted(NoteViewModel note)
+        private async void OnNoteDeleted(NoteViewModel note)
         {
-            _noteStore.DeleteNote(note.Id);
-            Notes.Remove(note);
+            var response = await _noteStore.DeleteNote(note.Id);
+            if (response.IsSuccessStatusCode)
+            {
+                Notes.Remove(note);
+            }
         }
     }
 }
