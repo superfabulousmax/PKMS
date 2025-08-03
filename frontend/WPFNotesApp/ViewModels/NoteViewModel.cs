@@ -15,8 +15,8 @@ namespace WPFNotesApp.ViewModels
         public ICommand OpenNoteCommand { get; }
 
 
-        EditNoteViewModel editViewModel;
-        EditNoteView editWindow;
+        private EditNoteViewModel _editViewModel;
+        private EditNoteView _editWindow;
 
         private readonly IEventAggregator _eventAggregator;
         private NoteRead _note;
@@ -46,9 +46,9 @@ namespace WPFNotesApp.ViewModels
 
         private void OpenNote()
         {
-            editViewModel = new EditNoteViewModel(_note, _eventAggregator);
-            editWindow = new EditNoteView { DataContext = editViewModel };
-            editWindow.ShowDialog();
+            _editViewModel = new EditNoteViewModel(_note, _eventAggregator);
+            _editWindow = new EditNoteView { DataContext = _editViewModel };
+            _editWindow.ShowDialog();
         }
 
     }

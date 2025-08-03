@@ -10,7 +10,7 @@ namespace WPFNotesApp.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private readonly IEventAggregator _eventAggregator;
-        private INoteStore _noteStore = null;
+        private INoteStore _noteStore;
 
         public ObservableCollection<NoteViewModel> Notes { get; set; } = new();
 
