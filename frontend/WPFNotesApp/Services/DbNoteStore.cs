@@ -8,35 +8,45 @@ namespace WPFNotesApp.Services
     public interface INoteStore
     {
         public Task<List<NoteRead>> GetAllNotes();
+        public Task<List<NoteRead>> SearchNotes(string query);
         public Task<HttpResponseMessage> AddNote(NoteCreate note);
         public Task<HttpResponseMessage> UpdateNote(NoteRead noteRead);
         public Task<HttpResponseMessage> DeleteNote(int id);
+
     }
+
     public class DbNoteStore: INoteStore
     {
+        private const string Endpoint = "notes/";
         public DbNoteStore() { }
 
         private readonly HttpClient _httpClient = BackendConnector.Instance.Client;
 
         public async Task<List<NoteRead>> GetAllNotes()
         {
-            var notes = await _httpClient.GetFromJsonAsync<List<NoteRead>>("notes/");
+            var notes = await _httpClient.GetFromJsonAsync<List<NoteRead>>(Endpoint);
+            return notes ?? new List<NoteRead>();
+        }
+
+        public async Task<List<NoteRead>> SearchNotes(string query)
+        {
+            var notes = await _httpClient.GetFromJsonAsync<List<NoteRead>>($"{Endpoint}search/{query}");
             return notes ?? new List<NoteRead>();
         }
 
         public async Task<HttpResponseMessage> UpdateNote(NoteRead note)
         {
-            return await _httpClient.PutAsJsonAsync($"notes/{note.Id}", note);
+            return await _httpClient.PutAsJsonAsync($"{Endpoint}{note.Id}", note);
         }
 
         public async Task<HttpResponseMessage> DeleteNote(int id)
         {
-            return await _httpClient.DeleteAsync($"notes/{id}");
+            return await _httpClient.DeleteAsync($"{Endpoint}{id}");
         }
 
         public async Task<HttpResponseMessage> AddNote(NoteCreate note)
         {
-            return await _httpClient.PostAsJsonAsync("notes/", note);
+            return await _httpClient.PostAsJsonAsync($"{Endpoint}", note);
         }
     }
 }

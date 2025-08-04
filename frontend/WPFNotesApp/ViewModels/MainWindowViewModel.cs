@@ -55,7 +55,7 @@ namespace WPFNotesApp.ViewModels
             Notes.Clear();
             foreach (var note in notes)
             {
-                var vm = new NoteViewModel(note, _eventAggregator);
+                var vm = new NoteViewModel(note, _eventAggregator, _noteStore);
                 Notes.Add(vm);
             }
             
@@ -74,7 +74,7 @@ namespace WPFNotesApp.ViewModels
                 {
                     return;
                 }
-                var vm = new NoteViewModel(note, _eventAggregator);
+                var vm = new NoteViewModel(note, _eventAggregator, _noteStore);
                 Notes.Add(vm);
                 Title = string.Empty;
                 Body = string.Empty;

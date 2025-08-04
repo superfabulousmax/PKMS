@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFNotesApp.Views"
+        xmlns:utils="clr-namespace:WPFNotesApp.Utils"
         mc:Ignorable="d"
         Title="Edit Note" Height="450" Width="800">
     <Grid>
@@ -12,11 +13,13 @@
             <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Text="Body" Margin="0,10,0,0"/>
-            <TextBox Text="{Binding Body, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="150" TextWrapping="Wrap"/>
+            <TextBox Text="{Binding Body, UpdateSourceTrigger=PropertyChanged}" 
+         AcceptsReturn="True" Height="150" TextWrapping="Wrap"
+            utils:DoubleSlashSearchTrigger.EnableSlashTrigger="True" />
 
             <Button Content="Save" Command="{Binding SaveCommand}" Margin="0,10,0,0"/>
             <TextBlock Text="{Binding SaveStatus}" Margin="10,10,0,0" Foreground="Green" FontWeight="Bold"/>
         </StackPanel>
-
+        <local:AutoCompletePopupView DataContext="{Binding PopupViewModel}" />
     </Grid>
 </Window>

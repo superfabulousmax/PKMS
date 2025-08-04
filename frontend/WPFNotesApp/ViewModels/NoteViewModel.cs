@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using WPFNotesApp.Events;
 using WPFNotesApp.Models;
+using WPFNotesApp.Services;
 using WPFNotesApp.Views;
 
 namespace WPFNotesApp.ViewModels
@@ -17,13 +18,14 @@ namespace WPFNotesApp.ViewModels
         public ICommand OpenNoteCommand { get; }
 
         private readonly IEventAggregator _eventAggregator;
+        private readonly INoteStore _noteStore;
         private const int PreviewLength = 100;
 
         private EditNoteViewModel _editViewModel;
         private EditNoteView _editWindow;
 
         private NoteRead _note;
-        public NoteViewModel(NoteRead note, IEventAggregator eventAggregator)
+        public NoteViewModel(NoteRead note, IEventAggregator eventAggregator, INoteStore noteStore)
         {
             DeleteNoteCommand = new RelayCommand(DeleteNote);
             OpenNoteCommand = new RelayCommand(OpenNote);
@@ -33,6 +35,7 @@ namespace WPFNotesApp.ViewModels
             _note = note;
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<NoteSaveRequestedEvent>().Subscribe(OnNoteSaved);
+            _noteStore = noteStore;
         }
 
         private void OnNoteSaved(NoteRead note)
@@ -49,7 +52,7 @@ namespace WPFNotesApp.ViewModels
 
         private void OpenNote()
         {
-            _editViewModel = new EditNoteViewModel(_note, _eventAggregator);
+            _editViewModel = new EditNoteViewModel(_note, _eventAggregator, _noteStore);
             _editWindow = new EditNoteView { DataContext = _editViewModel };
             _editWindow.ShowDialog();
         }

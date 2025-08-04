@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from src.schemas.note import NoteCreate, NoteRead
 from src.controller.note import \
-    create_note, get_notes, get_note, update_note, delete_note
+    create_note, get_notes, get_note, update_note, delete_note, link_notes, search_notes
 from src.db.session import get_db
 
 
@@ -44,3 +45,25 @@ async def note_delete(note_id: int, db: Session = Depends(get_db)):
     if not db_note:
         raise HTTPException(status_code=404, detail="Note not found")
     return {"detail": "Note deleted"}
+
+
+@router.post("/notes/{from_note_id}/link/{to_note_id}")
+async def link_note_endpoint(
+    from_note_id: int,
+    to_note_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    note = await link_notes(db, from_note_id, to_note_id)
+    if not note:
+        raise HTTPException(
+            status_code=404,
+            detail="One or both notes not found")
+    return note
+
+@router.get("/search/{query}")
+async def search_note_endpoint(
+    query: str,
+    db: AsyncSession = Depends(get_db),
+):
+    note = await search_notes(db, query)
+    return note
